@@ -8,3 +8,5 @@ Functions include:
 * Various conversion functions (explicit data conversion, ADC-conversions)
 * Simple math functions (various straight line functions)
 * Specific counter functions
+
+It also includes the whole stdperiph v3.5, newlib, and core funtionality.
