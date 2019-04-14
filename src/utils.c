@@ -230,20 +230,6 @@ int32_t utilBounceValue(int32_t val, int32_t diff, int32_t min, int32_t max,int8
 }
 
 /*
- * increments a value and wraps it to 0 if too large
- */
-inline uint32_t utilIncAndWrapTo0(uint32_t val, uint32_t max)
-{
-	val++;
-	if(val>max)
-	{
-		val=0;
-	}
-	return val;
-
-}
-
-/*
  * Returns the sign of the value
  */
 int8_t utilSign(int32_t v)
@@ -256,6 +242,203 @@ int8_t utilSign(int32_t v)
 	{
 		return -1;
 	}
+}
+
+/*
+ * Converts two bytes into an uint16_t. Useful when getting data from the printheads
+ * data is a pointer to the data where the uint16 starts. Will always assume 2 bytes of data
+ * Note: This is very non-atomic
+ */
+uint16_t util2BytesToUint16(uint8_t* data, bool lsbFirst)
+{
+	uint16_t tmp=0;
+	if(lsbFirst)
+	{
+		tmp=(uint16_t)data[0];
+		tmp+=(uint16_t)(data[1]<<8);
+	}
+	else
+	{
+		tmp=(uint16_t)data[1];
+		tmp+=(uint16_t)(data[0]<<8);
+	}
+	return tmp;
+}
+
+/*
+ * Converts four bytes into a uint32_t. Useful when getting data from the printheads
+ * data is a pointer to the data where the uint32 starts. Always assumes 4 bytes
+ * Note: This is very non-atomic
+ */
+uint32_t util4BytesToUint32(uint8_t* data, bool lsbFirst)
+{
+	uint32_t tmp=0;
+	if(lsbFirst)
+	{
+		tmp=(uint32_t)data[0];
+		tmp+=(uint32_t)(data[1]<<8);
+		tmp+=(uint32_t)(data[2]<<16);
+		tmp+=(uint32_t)(data[3]<<24);
+	}
+	else
+	{
+		tmp=(uint32_t)data[3];
+		tmp+=(uint32_t)(data[2]<<8);
+		tmp+=(uint32_t)(data[1]<<16);
+		tmp+=(uint32_t)(data[0]<<24);
+	}
+	return tmp;
+}
+
+/*
+ * Takes a uint16_t and inserts it into an array with two bytes
+ * Note: This is very non-atomic
+ */
+void utilUint16To2Bytes(uint16_t in, uint8_t* out,bool lsbFirst)
+{
+	if(lsbFirst)
+	{
+		out[0]=(uint16_t)(in&0xFF);
+		out[1]=(uint16_t)((in>>8)&0xFF);
+	}
+	else
+	{
+		out[1]=(uint16_t)(in&0xFF);
+		out[0]=(uint16_t)((in>>8)&0xFF);
+	}
+}
+
+/*
+ * Takes a uint32_t and inserts it into an array with four bytes
+ * Note: This is very non-atomic
+ */
+void utilUint32To4Bytes(uint32_t in, uint8_t* out,bool lsbFirst)
+{
+	if(lsbFirst)
+	{
+		out[0]=(uint16_t)(in&0xFF);
+		out[1]=(uint16_t)((in>>8)&0xFF);
+		out[2]=(uint16_t)((in>>16)&0xFF);
+		out[3]=(uint16_t)((in>>24)&0xFF);
+	}
+	else
+	{
+		out[3]=(uint16_t)(in&0xFF);
+		out[2]=(uint16_t)((in>>8)&0xFF);
+		out[1]=(uint16_t)((in>>16)&0xFF);
+		out[0]=(uint16_t)((in>>24)&0xFF);
+	}
+}
+
+/*
+ * Will give you the bit number of the highest bit set for a value
+ * A value of 1 will return 0 (the first bit is bit 0)
+ * If no bit is set, it will return UINT8_MAX
+ */
+uint8_t utilGetBitNumber(uint32_t val)
+{
+	if(!val)
+	{
+		return UINT8_MAX;
+	}
+	uint8_t cnt=0;
+	while(val)
+	{
+		val=val>>1;
+		cnt++;
+	}
+	return cnt-1;
+}
+
+/*
+ * Returns an X-point on a straight line, given a point (x1,y1), a slope (k), and y-coordinate for the other point
+ */
+int32_t utilLineGetXPoint(int32_t x1, int32_t y1, int32_t y, int32_t k)
+{
+	return (x1-(y1-y)/k);
+}
+
+/*
+ * Returns an X-point on a straight line, given a point (x1,y1), a slope (k), and y-coordinate for the other point
+ * Supports floating point
+ */
+float utilLineGetXPointF(float x1, float y1, float y, float k)
+{
+	return (x1-(y1-y)/k);
+}
+
+/*
+ * Returns an Y-point on a straight line, given a point (x1,y1), a slope (k), and x-coordinate for the other point
+ */
+int32_t utilLineGetYPoint(int32_t x1, int32_t y1, int32_t x, int32_t k)
+{
+	return (y1-k*(x1-x));
+}
+
+/*
+ * Returns an Y-point on a straight line, given a point (x1,y1), a slope (k), and x-coordinate for the other point
+ * Supports floating point
+ */
+float utilLineGetYPointF(float x1, float y1, float x, float k)
+{
+	return (y1-k*(x1-x));
+}
+
+/*
+ * Finds the slope (k) for a line given 2 points {{x1,y1},{x2,y2}}
+ * This satisfies the function y=kx+m
+ */
+int32_t utilLineFindSlope(int32_t x1, int32_t y1, int32_t x2, int32_t y2)
+{
+	return (y1-y2)/(x1-x2);
+}
+
+/*
+ * Finds the slope (k) for a line given 2 points {{x1,y1},{x2,y2}}
+ * This satisfies the function y=kx+m
+ * Floating point version
+ */
+float utilLineFindSlopeF(float x1, float y1, float x2, float y2)
+{
+	return (y1-y2)/(x1-x2);
+}
+
+/*
+ * Finds the slope (k) for a line given 2 points {{x1,y1},{x2,y2}},
+ * relative to Y2
+ */
+int32_t utilLineFindSlopeRel(int32_t x1, int32_t y1, int32_t x2, int32_t y2)
+{
+	return (y2/y1-1)/(x1-x2);
+}
+
+/*
+ * Finds the slope (k) for a line given 2 points {{x1,y1},{x2,y2}},
+ * relative to Y2
+ * Floating point version
+ */
+float utilLineFindSlopeRelF(float x1, float y1, float x2, float y2)
+{
+	return (y2/y1-1)/(x1-x2);
+}
+
+/*
+ * Linear interpolate a value between two know points
+ */
+int32_t utilLineInterpolate(int32_t x, int32_t x1, int32_t y1, int32_t x2, int32_t y2)
+{
+	const int32_t k=utilLineFindSlope(x1,y1,x2,y2);
+	return k*x+y1-k*x1;
+}
+
+/*
+ * Linear interpolate a value between two know points
+ * Floating point version
+ */
+float utilLineInterpolateF(float x, float x1, float y1, float x2, float y2)
+{
+	const float k=utilLineFindSlopeF(x1,y1,x2,y2);
+	return k*x+y1-k*x1;
 }
 
 /*
@@ -623,7 +806,7 @@ void utilSetClockDMA(DMA_Channel_TypeDef* dmaCh,FunctionalState state)
 }
 
 /*
- * Sets the clock for a given SPI
+ * Sets the clock for a given ADC
  */
 void utilSetClockADC(ADC_TypeDef* adc, FunctionalState state)
 {
@@ -684,6 +867,7 @@ void utilSetClockADC(ADC_TypeDef* adc, FunctionalState state)
 	}
 #endif
 }
+
 
 /*
  * Sets the clock for a given timer
@@ -1016,9 +1200,28 @@ void utilSetClockTIM(TIM_TypeDef* tim, FunctionalState state)
 }
 
 /*
+ * Set AFIO clock to a state
+ */
+void utilSetClockAFIO(FunctionalState state)
+{
+#ifdef RCC_APB1Periph_AFIO
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_AFIO,state);
+#endif
+#ifdef RCC_APB2Periph_AFIO
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO,state);
+#endif
+#ifdef RCC_APB3Periph_AFIO
+	RCC_APB3PeriphClockCmd(RCC_APB3Periph_AFIO,state);
+#endif
+#ifdef RCC_AHBPeriph_AFIO
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_AFIO,state);
+#endif
+}
+
+/*
  * Inits a certain OC for a timer, based on a number
  */
-void utilInitTIMOC(TIM_TypeDef* TIMx, uint8_t ch, TIM_OCInitTypeDef* TIM_OCInitStruct)
+void utilTIMOCInit(TIM_TypeDef* TIMx, uint8_t ch, TIM_OCInitTypeDef* TIM_OCInitStruct)
 {
 	switch(ch)
 	{
@@ -1038,9 +1241,30 @@ void utilInitTIMOC(TIM_TypeDef* TIMx, uint8_t ch, TIM_OCInitTypeDef* TIM_OCInitS
 }
 
 /*
+ * Sets the preload for the timer oc-channel
+ */
+void utilTIMOCConfigPreload(TIM_TypeDef* TIMx, uint8_t ch, uint16_t timOcPreload)
+{
+	switch(ch)
+	{
+	case 1:
+		TIM_OC1PreloadConfig(TIMx,timOcPreload);
+		break;
+	case 2:
+		TIM_OC2PreloadConfig(TIMx,timOcPreload);
+		break;
+	case 3:
+		TIM_OC3PreloadConfig(TIMx,timOcPreload);
+		break;
+	case 4:
+		TIM_OC4PreloadConfig(TIMx,timOcPreload);
+		break;
+	}
+}
+/*
  * Write a value to a timer channel, based on a number
  */
-void utilTIMWriteOC(TIM_TypeDef* tim, uint8_t ch, uint32_t val)
+void utilTIMOCWrite(TIM_TypeDef* tim, uint8_t ch, uint32_t val)
 {
 	switch(ch)
 	{
