@@ -80,8 +80,12 @@ float utilLineInterpolateF(float x, float x1, float y1, float x2, float y2);
 //Explicit data conversion functions
 void utilUint32To4Bytes(uint32_t in, uint8_t* out,bool lsbFirst);
 void utilUint16To2Bytes(uint16_t in, uint8_t* out,bool lsbFirst);
+void utilInt16To2Bytes(int16_t in, uint8_t* out,bool lsbFirst);
+void utilInt32To4Bytes(int32_t in, uint8_t* out,bool lsbFirst);
 uint32_t util4BytesToUint32(uint8_t* data, bool lsbFirst);
 uint16_t util2BytesToUint16(uint8_t* data, bool lsbFirst);
+int16_t util2BytesToInt16(uint8_t* data, bool lsbFirst);
+int32_t util4BytesToInt32(uint8_t* data, bool lsbFirst);
 uint8_t utilGetBitNumber(uint32_t val);
 
 //Clock setting functions

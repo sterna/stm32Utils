@@ -266,6 +266,28 @@ uint16_t util2BytesToUint16(uint8_t* data, bool lsbFirst)
 }
 
 /*
+ * Converts two bytes into an int16_t. Useful when getting data from the printheads
+ * data is a pointer to the data where the int16 starts. Will always assume 2 bytes of data
+ * Note: This is very non-atomic
+ */
+int16_t util2BytesToInt16(uint8_t* data, bool lsbFirst)
+{
+	uint16_t tmp=0;
+	if(lsbFirst)
+	{
+		tmp=(uint16_t)data[0];
+		tmp+=(uint16_t)(data[1]<<8);
+	}
+	else
+	{
+		tmp=(uint16_t)data[1];
+		tmp+=(uint16_t)(data[0]<<8);
+	}
+	return (int16_t)(tmp-INT16_MAX);
+}
+
+
+/*
  * Converts four bytes into a uint32_t. Useful when getting data from the printheads
  * data is a pointer to the data where the uint32 starts. Always assumes 4 bytes
  * Note: This is very non-atomic
@@ -291,6 +313,31 @@ uint32_t util4BytesToUint32(uint8_t* data, bool lsbFirst)
 }
 
 /*
+ * Converts four bytes into a int32_t. Useful when getting data from the printheads
+ * data is a pointer to the data where the int32 starts. Always assumes 4 bytes
+ * Note: This is very non-atomic
+ */
+int32_t util4BytesToInt32(uint8_t* data, bool lsbFirst)
+{
+	uint32_t tmp=0;
+	if(lsbFirst)
+	{
+		tmp=(uint32_t)data[0];
+		tmp+=(uint32_t)(data[1]<<8);
+		tmp+=(uint32_t)(data[2]<<16);
+		tmp+=(uint32_t)(data[3]<<24);
+	}
+	else
+	{
+		tmp=(uint32_t)data[3];
+		tmp+=(uint32_t)(data[2]<<8);
+		tmp+=(uint32_t)(data[1]<<16);
+		tmp+=(uint32_t)(data[0]<<24);
+	}
+	return (int32_t)(tmp-INT32_MAX);
+}
+
+/*
  * Takes a uint16_t and inserts it into an array with two bytes
  * Note: This is very non-atomic
  */
@@ -305,6 +352,25 @@ void utilUint16To2Bytes(uint16_t in, uint8_t* out,bool lsbFirst)
 	{
 		out[1]=(uint16_t)(in&0xFF);
 		out[0]=(uint16_t)((in>>8)&0xFF);
+	}
+}
+
+/*
+ * Takes an int16_t and inserts it into an array with two bytes
+ * Note: This is very non-atomic
+ */
+void utilInt16To2Bytes(int16_t in, uint8_t* out,bool lsbFirst)
+{
+	uint16_t tmp=(uint16_t)(in+INT16_MAX);
+	if(lsbFirst)
+	{
+		out[0]=(uint16_t)(tmp&0xFF);
+		out[1]=(uint16_t)((tmp>>8)&0xFF);
+	}
+	else
+	{
+		out[1]=(uint16_t)(tmp&0xFF);
+		out[0]=(uint16_t)((tmp>>8)&0xFF);
 	}
 }
 
@@ -327,6 +393,29 @@ void utilUint32To4Bytes(uint32_t in, uint8_t* out,bool lsbFirst)
 		out[2]=(uint16_t)((in>>8)&0xFF);
 		out[1]=(uint16_t)((in>>16)&0xFF);
 		out[0]=(uint16_t)((in>>24)&0xFF);
+	}
+}
+
+/*
+ * Takes an int32_t and inserts it into an array with four bytes
+ * Note: This is very non-atomic
+ */
+void utilInt32To4Bytes(int32_t in, uint8_t* out,bool lsbFirst)
+{
+	uint32_t tmp=(uint32_t)(in+INT32_MAX);
+	if(lsbFirst)
+	{
+		out[0]=(uint16_t)(tmp&0xFF);
+		out[1]=(uint16_t)((tmp>>8)&0xFF);
+		out[2]=(uint16_t)((tmp>>16)&0xFF);
+		out[3]=(uint16_t)((tmp>>24)&0xFF);
+	}
+	else
+	{
+		out[3]=(uint16_t)(tmp&0xFF);
+		out[2]=(uint16_t)((tmp>>8)&0xFF);
+		out[1]=(uint16_t)((tmp>>16)&0xFF);
+		out[0]=(uint16_t)((tmp>>24)&0xFF);
 	}
 }
 
