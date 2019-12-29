@@ -153,6 +153,14 @@ uint32_t utilRandRange(uint32_t range)
 }
 
 /*
+ * Sends a seed to the rand function
+ */
+void utilRandSeed(uint32_t seed)
+{
+	srand(seed);
+}
+
+/*
  * Increase or decrease values based on certain parameters
  */
 uint32_t utilIncWithDir(uint32_t val, int8_t dir, uint32_t rate, uint32_t min, uint32_t max)

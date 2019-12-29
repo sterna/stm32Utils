@@ -61,6 +61,7 @@ signed long xatoi2(char* s);
 unsigned char xisdigit(char c);
 //Various small math functions
 uint32_t utilRandRange(uint32_t range);
+void utilRandSeed(uint32_t seed);
 uint32_t utilIncWithDir(uint32_t val, int8_t dir, uint32_t rate, uint32_t min, uint32_t max);
 int32_t utilLoopValue(int32_t val, int32_t diff, int32_t min, int32_t max);
 int32_t utilBounceValue(int32_t val, int32_t diff, int32_t min, int32_t max,int8_t* dir);
