@@ -34,6 +34,9 @@
 
 #define utilConvertADCtoMillivolt(x) ((MILLIVOLT_PER_10BIT*((uint32_t)x))/10000)
 
+//Returns the max between x and y. Probably not 100% typesafe
+#define utilMax(x,y)	(x>y ? x : y)
+
 #define UTIL_GET_IRQn(x)		x##_IRQn
 #define UTIL_GET_IRQHandler(x)	x##_IRQHandler
 
@@ -77,6 +80,8 @@ int32_t utilLineFindSlopeRel(int32_t x1, int32_t y1, int32_t x2, int32_t y2);
 float utilLineFindSlopeRelF(float x1, float y1, float x2, float y2);
 int32_t utilLineInterpolate(int32_t x, int32_t x1, int32_t y1, int32_t x2, int32_t y2);
 float utilLineInterpolateF(float x, float x1, float y1, float x2, float y2);
+
+uint32_t utilSqrtI2I(uint32_t v);
 
 //Explicit data conversion functions
 void utilUint32To4Bytes(uint32_t in, uint8_t* out,bool lsbFirst);

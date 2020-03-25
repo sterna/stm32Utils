@@ -538,6 +538,60 @@ float utilLineInterpolateF(float x, float x1, float y1, float x2, float y2)
 	return k*x+y1-k*x1;
 }
 
+
+/*
+	MIT License
+
+	Copyright (c) 2019 Christophe Meessen
+
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in all
+	copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+	SOFTWARE.
+
+	License for the integer square root
+ */
+
+/*
+ * uint32_t sqrtI2I(uint32_t v);
+ *
+ * Compute uint32_t to uint32_t square root
+ * RETURNS the integer square root of v
+ * REQUIRES v is positive (or sadness will fall :( )
+ */
+uint32_t utilSqrtI2I(uint32_t v)
+{
+    uint32_t t, q, b, r;
+    r = v;           // r = v - x²
+    b = 0x40000000;  // a²
+    q = 0;           // 2ax
+    while( b > 0 )
+    {
+        t = q + b;   // t = 2ax + a²
+        q >>= 1;     // if a' = a/2, then q' = q/2
+        if( r >= t ) // if (v - x²) >= 2ax + a²
+        {
+            r -= t;  // r' = (v - x²) - (2ax + a²)
+            q += b;  // if x' = (x + a) then ax' = ax + a², thus q' = q' + b
+        }
+        b >>= 2;     // if a' = a/2, then b' = b / 4
+    }
+    return q;
+}
+
 /*
  * Sets the clock for a given GPIO
  */
