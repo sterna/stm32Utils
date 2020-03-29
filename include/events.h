@@ -22,6 +22,8 @@
  * Suggestion is to do this periodically.
  * To read an event state, use any of the provided functions. You CAN read the event-active state directly from the struct,
  * 	but no other information is recommended to read directly.
+ *
+ * Note: The reset-timer feature should only be used if you're sure you're the subscriber with the longest time frame
  */
 
 /*
@@ -44,5 +46,7 @@ bool eventGetSate(eventState_t* event);
 bool eventGetRisingEdge(eventState_t* event);
 bool eventGetFallingEdge(eventState_t* event);
 bool eventGetActiveForMoreThan(eventState_t* event, uint32_t ms);
+void eventResetEvent(eventState_t* event);
+void eventSetTimerToNow(eventState_t* event);
 
 #endif /* STM32UTILS_INCLUDE_EVENTS_H_ */

@@ -94,8 +94,6 @@ bool eventGetFallingEdge(eventState_t* event)
 
 /*
  * Returns true if a switch has been active for more than ms milliseconds
- * If true is returned, the state will be restarted treating it as if the switch has been released for a very short period of time
- * This means that this function will not return true again until ms milliseconds has passed again
  */
 bool eventGetActiveForMoreThan(eventState_t* event, uint32_t ms)
 {
@@ -105,7 +103,6 @@ bool eventGetActiveForMoreThan(eventState_t* event, uint32_t ms)
 	}
 	else if((systemTime - ms) > event->activationStartTime)
 	{
-		event->activationStartTime=systemTime;
 		return true;
 	}
 	else
@@ -114,3 +111,26 @@ bool eventGetActiveForMoreThan(eventState_t* event, uint32_t ms)
 	}
 }
 
+/*
+ *	Resets the status of the event
+ */
+void eventResetEvent(eventState_t* event)
+{
+	event->active=false;
+	event->counter=0;
+	event->fallingEdgeActive=false;
+	event->risingEdgeActive=false;
+	event->activationStartTime=UINT32_MAX;
+}
+
+/*
+ * Sets the activation timer to now (only if event is actually active)
+ * Note that the timer will be reset for all that listens to the event
+ */
+void eventSetTimerToNow(eventState_t* event)
+{
+	if(event->active)
+	{
+		event->activationStartTime=systemTime;
+	}
+}
