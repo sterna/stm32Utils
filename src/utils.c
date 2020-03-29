@@ -592,6 +592,7 @@ uint32_t utilSqrtI2I(uint32_t v)
     return q;
 }
 
+
 /*
  * Sets the clock for a given GPIO
  */

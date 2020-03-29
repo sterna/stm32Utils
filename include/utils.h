@@ -18,6 +18,10 @@
 #define _BV(x) (1<<x)
 #endif
 
+#ifndef PI
+#define PI	3.14159f
+#endif
+
 //The max value the ADC can use (12bit)
 #define ADC_MAX_VAL	4096
 //Used to convert an ADC-value to millivolt
