@@ -162,6 +162,7 @@ void utilRandSeed(uint32_t seed)
 
 /*
  * Increase or decrease values based on certain parameters
+ * Min and max values are included
  */
 uint32_t utilIncWithDir(uint32_t val, int8_t dir, uint32_t rate, uint32_t min, uint32_t max)
 {
@@ -233,6 +234,35 @@ int32_t utilBounceValue(int32_t val, int32_t diff, int32_t min, int32_t max,int8
 	if(dir!=NULL)
 	{
 		*dir=dirAfter;
+	}
+	return val;
+}
+
+/*
+ * Increments a value until (including) max. When max is reached, it goes back to 0
+ */
+uint32_t utilIncLoopSimple(uint32_t val, uint32_t max)
+{
+	val++;
+	if(val>max)
+	{
+		val=0;
+	}
+	return val;
+}
+
+/*
+ * Decrements a down to and including 0. When 0 is reached, it jumps to max
+ */
+uint32_t utilDecLoopSimple(uint32_t val, uint32_t max)
+{
+	if(val)
+	{
+		val--;
+	}
+	else
+	{
+		val=max;
 	}
 	return val;
 }

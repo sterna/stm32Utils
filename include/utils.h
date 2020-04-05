@@ -72,6 +72,8 @@ void utilRandSeed(uint32_t seed);
 uint32_t utilIncWithDir(uint32_t val, int8_t dir, uint32_t rate, uint32_t min, uint32_t max);
 int32_t utilLoopValue(int32_t val, int32_t diff, int32_t min, int32_t max);
 int32_t utilBounceValue(int32_t val, int32_t diff, int32_t min, int32_t max,int8_t* dir);
+uint32_t utilIncLoopSimple(uint32_t val, uint32_t max);
+uint32_t utilDecLoopSimple(uint32_t val, uint32_t max);
 int8_t utilSign(int32_t v);
 //Line functions
 int32_t utilLineGetXPoint(int32_t x1, int32_t y1, int32_t y, int32_t k);
