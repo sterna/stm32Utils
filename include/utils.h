@@ -66,6 +66,7 @@ char* ftostr(char* buf, float value, unsigned char places);
 float xatof(char *s);
 signed long xatoi2(char* s);
 unsigned char xisdigit(char c);
+
 //Various small math functions
 uint32_t utilRandRange(uint32_t range);
 void utilRandSeed(uint32_t seed);
@@ -75,6 +76,9 @@ int32_t utilBounceValue(int32_t val, int32_t diff, int32_t min, int32_t max,int8
 uint32_t utilIncLoopSimple(uint32_t val, uint32_t max);
 uint32_t utilDecLoopSimple(uint32_t val, uint32_t max);
 int8_t utilSign(int32_t v);
+bool utilValCloseEnough(int32_t val, int32_t thresh, int32_t tol);
+bool utilValCloseEnoughDual(int32_t val1, int32_t val2, int32_t thresh1, int32_t thresh2, int32_t tol);
+
 //Line functions
 int32_t utilLineGetXPoint(int32_t x1, int32_t y1, int32_t y, int32_t k);
 float utilLineGetXPointF(float x1, float y1, float y, float k);

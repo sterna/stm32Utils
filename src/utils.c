@@ -283,6 +283,38 @@ int8_t utilSign(int32_t v)
 }
 
 /*
+ * Return true if a value is close enough to a given threshold with a given tolerance
+ * The edge values are included
+ */
+bool utilValCloseEnough(int32_t val, int32_t thresh, int32_t tol)
+{
+	if((val>=(thresh-tol)) && (val<=(thresh+tol)))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+/*
+ * Return true if a value is close enough to a given threshold with a given tolerance
+ * The edge values are included
+ */
+bool utilValCloseEnoughDual(int32_t val1, int32_t val2, int32_t thresh1, int32_t thresh2, int32_t tol)
+{
+	if(utilValCloseEnough(val1,thresh1,tol) && utilValCloseEnough(val2,thresh2,tol))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+/*
  * Converts two bytes into an uint16_t. Useful when getting data from the printheads
  * data is a pointer to the data where the uint16 starts. Will always assume 2 bytes of data
  * Note: This is very non-atomic
@@ -323,7 +355,6 @@ int16_t util2BytesToInt16(uint8_t* data, bool lsbFirst)
 	}
 	return (int16_t)(tmp-INT16_MAX);
 }
-
 
 /*
  * Converts four bytes into a uint32_t. Useful when getting data from the printheads
