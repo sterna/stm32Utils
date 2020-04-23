@@ -315,6 +315,24 @@ bool utilValCloseEnoughDual(int32_t val1, int32_t val2, int32_t thresh1, int32_t
 }
 
 /*
+ * Scales a value from one range to another (same as Arduino map)
+ * Note that inMax!=inMax
+ */
+int32_t utilMap(int32_t in, int32_t inMin, int32_t inMax, int32_t outMin, int32_t outMax)
+{
+	return ((in - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
+}
+
+/*
+ * Simplified version of utilMap, but assumes the min values are 0
+ * Note that scaleMax and scale must be positive integers and that scaleMax must be >0
+ */
+int32_t utilScale(int32_t in, uint32_t scaleMax, uint32_t scale)
+{
+	return (in*scale)/scaleMax;
+}
+
+/*
  * Converts two bytes into an uint16_t. Useful when getting data from the printheads
  * data is a pointer to the data where the uint16 starts. Will always assume 2 bytes of data
  * Note: This is very non-atomic
