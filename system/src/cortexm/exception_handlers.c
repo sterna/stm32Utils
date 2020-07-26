@@ -344,7 +344,7 @@ isSemihosting (ExceptionStackFrame* frame, uint16_t opCode)
 // (Based on Joseph Yiu's, The Definitive Guide to ARM Cortex-M3 and
 // Cortex-M4 Processors, Third Edition, Chap. 12.8, page 402).
 
-void __attribute__ ((section(".after_vectors"),weak,naked))
+void __attribute__ ((section(".after_vectors"),weak,naked,used))
 HardFault_Handler (void)
 {
   asm volatile(
@@ -478,7 +478,7 @@ MemManage_Handler (void)
     }
 }
 
-void __attribute__ ((section(".after_vectors"),weak,naked))
+void __attribute__ ((section(".after_vectors"),weak,naked,used))
 BusFault_Handler (void)
 {
   asm volatile(
@@ -517,7 +517,7 @@ BusFault_Handler_C (ExceptionStackFrame* frame __attribute__((unused)),
     }
 }
 
-void __attribute__ ((section(".after_vectors"),weak,naked))
+void __attribute__ ((section(".after_vectors"),weak,naked,used))
 UsageFault_Handler (void)
 {
   asm volatile(
