@@ -213,11 +213,11 @@ int32_t utilLoopValue(int32_t val, int32_t diff, int32_t min, int32_t max)
 	val=val+diff;
 	while(val<min)
 	{
-		val+=(range+1);
+		val=val+range+1;
 	}
-	while(val>max)	//Todo: Why did I use val>max+1???
+	while(val>max)
 	{
-		val-=(range-1);
+		val=val-range-1;
 	}
 	return val;
 }
