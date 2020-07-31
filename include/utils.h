@@ -80,6 +80,7 @@ bool utilValCloseEnough(int32_t val, int32_t thresh, int32_t tol);
 bool utilValCloseEnoughDual(int32_t val1, int32_t val2, int32_t thresh1, int32_t thresh2, int32_t tol);
 int32_t utilMap(int32_t in, int32_t inMin, int32_t inMax, int32_t outMin, int32_t outMax);
 int32_t utilScale(int32_t in, uint32_t scaleMax, uint32_t scale);
+bool utilValueWillOverflow(int32_t val, int32_t diff, int32_t min, int32_t max);
 
 //Line functions
 int32_t utilLineGetXPoint(int32_t x1, int32_t y1, int32_t y, int32_t k);

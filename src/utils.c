@@ -161,6 +161,21 @@ void utilRandSeed(uint32_t seed)
 }
 
 /*
+ * Returns true if a value increment/decrement will overflow
+ */
+bool utilValueWillOverflow(int32_t val, int32_t diff, int32_t min, int32_t max)
+{
+	if((val+diff)>max || (val+diff)<min)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+/*
  * Increase or decrease values based on certain parameters
  * Min and max values are included
  */
@@ -198,11 +213,11 @@ int32_t utilLoopValue(int32_t val, int32_t diff, int32_t min, int32_t max)
 	val=val+diff;
 	while(val<min)
 	{
-		val+=range+1;
+		val+=(range+1);
 	}
-	while(val>max+1)
+	while(val>max)	//Todo: Why did I use val>max+1???
 	{
-		val-=range;
+		val-=(range-1);
 	}
 	return val;
 }
