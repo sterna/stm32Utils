@@ -8,7 +8,6 @@
 #ifndef STM32UTILS_INCLUDE_EVENTS_H_
 #define STM32UTILS_INCLUDE_EVENTS_H_
 
-
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>	//For memset
@@ -26,6 +25,8 @@
  * Note: The reset-timer feature should only be used if you're sure you're the subscriber with the longest time frame
  */
 
+#define EVENT_TIMED_MAX_EVENTS	10
+
 /*
  * Definition for a general event debouncing
  */
@@ -39,6 +40,22 @@ typedef struct
 	uint32_t activationStartTime;	//Records the systemTime at which the switch had a rising edge
 }eventState_t;
 
+/*
+ * Definition for an event timing list.
+ */
+typedef struct
+{
+	bool recordActive;				//Indicates if a recording is currently active
+	bool stopRecordAutomatically;	//Will stop recording when the number of events has filled up
+	bool hasLooped;					//Indicates if the number of recorded events has passed the set number of events at least once
+	uint8_t nofEvents;				//The number of events to record
+	uint32_t lastEventTime;			//The last time an event was recorded
+	uint8_t currentEventNum;		//The counter for the current event
+	uint32_t eventTimes[EVENT_TIMED_MAX_EVENTS];	//List of event times
+	uint32_t eventTimesTotal;		//The total time for all events
+	uint32_t avgTime;				//The average time for events
+}eventTimeList;
+
 
 void eventInit(eventState_t* event);
 void eventStateUpdate(eventState_t* event,bool sourceState);
@@ -48,5 +65,13 @@ bool eventGetFallingEdge(eventState_t* event);
 bool eventGetActiveForMoreThan(eventState_t* event, uint32_t ms);
 void eventResetEvent(eventState_t* event);
 void eventSetTimerToNow(eventState_t* event);
+
+void eventTimedInit(eventTimeList* event, bool stopRecordAuto, uint8_t nofEvents, bool start);
+bool eventTimedSendTrig(eventTimeList* event,bool start);
+void eventTimedStartRecording(eventTimeList* event);
+void eventTimedStopRecording(eventTimeList* event);
+bool eventTimedIsRecording(eventTimeList* event);
+uint32_t eventTimedRecalcAndGetAvg(eventTimeList* event);
+uint8_t eventTimeGetNofEventsRecorded(eventTimeList* event);
 
 #endif /* STM32UTILS_INCLUDE_EVENTS_H_ */
