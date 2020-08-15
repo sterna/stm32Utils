@@ -40,6 +40,8 @@
 
 //Returns the max between x and y. Probably not 100% typesafe
 #define utilMax(x,y)	(x>y ? x : y)
+//Returns the min between x and y. Probably not 100% typesafe
+#define utilMin(x,y)	(x<y ? x : y)
 
 #define UTIL_GET_IRQn(x)		x##_IRQn
 #define UTIL_GET_IRQHandler(x)	x##_IRQHandler
